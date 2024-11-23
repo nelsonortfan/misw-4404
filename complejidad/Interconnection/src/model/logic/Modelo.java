@@ -463,10 +463,26 @@ public class Modelo {
 
 			comparador= new Vertex.ComparadorXKey();
 
+			insertarLista2(lista, lista2,comparador, algsOrdenamientoEventos);		
+		}
+		else
+		{
+			Comparator<Country> comparador=null;
 
-			try 
+			Ordenamiento<Country> algsOrdenamientoEventos=new Ordenamiento<Country>();;
+
+			comparador= new Country.ComparadorXNombre();
+
+			insertarLista2Country(lista, lista2, comparador, algsOrdenamientoEventos);
+
+		}
+
+		return lista2;
+	}
+
+	public void insertarLista2(ILista lista, ILista lista2, Comparator<Vertex<String, Landing>> comparador,Ordenamiento<Vertex<String, Landing>> algsOrdenamientoEventos){
+		try 
 			{
-
 				if (lista!=null)
 				{
 					algsOrdenamientoEventos.ordenarMergeSort(lista, comparador, false);
@@ -508,16 +524,10 @@ public class Modelo {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}
-		else
-		{
-			Comparator<Country> comparador=null;
+	}
 
-			Ordenamiento<Country> algsOrdenamientoEventos=new Ordenamiento<Country>();;
-
-			comparador= new Country.ComparadorXNombre();
-
-			try 
+	public void insertarLista2Country(ILista lista, ILista lista2, Comparator<Country> comparador, Ordenamiento<Country> algsOrdenamientoEventos){
+		try 
 			{
 
 				if (lista!=null)
@@ -562,9 +572,6 @@ public class Modelo {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}
-
-		return lista2;
 	}
 	
 	public ITablaSimbolos unificarHash(ILista lista)
