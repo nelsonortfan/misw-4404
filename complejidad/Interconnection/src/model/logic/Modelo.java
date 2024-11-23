@@ -276,8 +276,21 @@ public class Modelo {
 		
 		int distancia=0;
 		
-		try
+		calcularMaximaRuta(fragmento, lista1, llave, distancia);
+		
+		if(fragmento.equals(""))
+		{	
+			return "No hay ninguna rama";
+		}
+		else 
 		{
+			return fragmento;
+		}
+	}
+
+	public void calcularMaximaRuta(String fragmento, ILista lista1, String llave, int distancia){
+		try
+		{			
 			int max=0;
 			for(int i=1; i<= lista1.size(); i++)
 			{
@@ -286,10 +299,8 @@ public class Modelo {
 					max= ((ILista)lista1.getElement(i)).size();
 					llave= (String) ((Vertex)((ILista)lista1.getElement(i)).getElement(1)).getId();
 				}
-			}
-			
-			ILista lista2= grafo.mstPrimLazy(llave);
-			
+			}			
+			ILista lista2= grafo.mstPrimLazy(llave);			
 			ITablaSimbolos tabla= new TablaHashSeparteChaining<>(2);
 			ILista candidatos= new ArregloDinamico<>(1);
 			for(int i=1; i<= lista2.size(); i++)
@@ -302,34 +313,19 @@ public class Modelo {
 				candidatos.insertElement(arco.getDestination(), candidatos.size()+1);
 				
 				tabla.put(arco.getDestination().getId(),arco.getSource() );
-			}
-			
+			}			
 			ILista unificado= unificar(candidatos, "Vertice");
-			fragmento+= " La cantidad de nodos conectada a la red de expansión mínima es: " + unificado.size() + "\n El costo total es de: " + distancia;
-			
+			fragmento+= " La cantidad de nodos conectada a la red de expansión mínima es: " + unificado.size() + "\n El costo total es de: " + distancia;			
 			int maximo=0;
 			int contador=0;
 			PilaEncadenada caminomax=new PilaEncadenada();
 			for(int i=1; i<= unificado.size(); i++)
 			{
-
 				PilaEncadenada path= new PilaEncadenada();
-				String idBusqueda= (String) ((Vertex) unificado.getElement(i)).getId();
-				Vertex actual;
+				String idBusqueda= (String) ((Vertex) unificado.getElement(i)).getId();				
+				calculoMaximoTabla(maximo, contador,caminomax, idBusqueda, tabla, path);
 
-				while( (actual= (Vertex) tabla.get(idBusqueda))!=null && actual.getInfo()!=null)
-				{
-					path.push(actual);
-					idBusqueda= (String) ((Vertex)actual).getId();
-					contador++;
-				}
-				
-				if(contador>maximo)
-				{
-					caminomax=path;
-				}
-			}
-			
+			}			
 			fragmento+="\n La rama más larga está dada por lo vértices: ";
 			for(int i=1; i<=caminomax.size(); i++)
 			{
@@ -342,14 +338,20 @@ public class Modelo {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		
-		if(fragmento.equals(""))
-		{	
-			return "No hay ninguna rama";
-		}
-		else 
+	}
+
+	public void calculoMaximoTabla(int maximo, int contador,PilaEncadenada caminomax,String idBusqueda,ITablaSimbolos tabla,PilaEncadenada path ){
+		Vertex actual;
+		while( (actual= (Vertex) tabla.get(idBusqueda))!=null && actual.getInfo()!=null)
 		{
-			return fragmento;
+			path.push(actual);
+			idBusqueda= (String) ((Vertex)actual).getId();
+			contador++;
+		}
+		
+		if(contador>maximo)
+		{
+			caminomax=path;
 		}
 	}
 	
